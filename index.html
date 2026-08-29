@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#00655d">
+<title>Cathay Interview Practice</title>
+<style>
+  :root{
+    --cx:#00655d;--cx-deep:#004a44;--cx-soft:#e6f1ef;
+    --ink:#16211f;--ink-soft:#546561;--line:#e2e7e5;--bg:#eef1ef;--card:#fff;
+    --gold:#c99a2e;--star:#e8a72c;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;margin:0;}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    display:flex;flex-direction:column;overflow:hidden;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  /* top bar */
+  .top{background:linear-gradient(135deg,var(--cx-deep),var(--cx));color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+  .top h1{font-size:15px;margin:0;font-weight:700;letter-spacing:.01em;flex:1;}
+  .top .prog{font-size:13px;opacity:.9;font-variant-numeric:tabular-nums;}
+  .top .wk{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:2px 9px;font-size:12px;font-weight:600;}
+
+  /* deck */
+  .deck{flex:1;display:flex;align-items:stretch;justify-content:center;padding:14px;min-height:0;}
+  .card{background:var(--card);border-radius:18px;box-shadow:0 8px 26px rgba(20,32,30,.12);width:100%;max-width:520px;display:flex;flex-direction:column;overflow:hidden;position:relative;}
+  .chip{align-self:flex-start;margin:16px 16px 0;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--cx);background:var(--cx-soft);border-radius:20px;padding:4px 11px;}
+  .qwrap{padding:14px 20px 6px;}
+  .qnum{font-size:12px;color:var(--ink-soft);font-weight:700;margin-bottom:6px;}
+  .q{font-family:Georgia,serif;font-size:22px;line-height:1.28;color:var(--ink);}
+  .body{flex:1;min-height:0;overflow-y:auto;padding:6px 20px 16px;-webkit-overflow-scrolling:touch;}
+  .reveal-btn{margin:10px 20px 18px;background:var(--cx);color:#fff;border:0;border-radius:12px;padding:15px;font-size:16px;font-weight:700;cursor:pointer;flex-shrink:0;}
+  .reveal-btn:active{transform:scale(.98);}
+  .answer{white-space:pre-wrap;font-size:15px;line-height:1.5;color:#22302d;}
+  .hint-swipe{text-align:center;font-size:12px;color:var(--ink-soft);opacity:.7;margin:2px 0 0;}
+  .edited{display:inline-block;font-size:10px;font-weight:800;color:var(--gold);border:1px solid var(--gold);border-radius:4px;padding:1px 5px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em;}
+
+  /* actions */
+  .actions{display:flex;gap:8px;padding:0 14px 8px;flex-shrink:0;}
+  .actions button{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 6px;font-size:12.5px;font-weight:600;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;}
+  .actions button:active{background:#f2f5f4;}
+  .actions .ico{font-size:18px;line-height:1;}
+  .actions button.on{background:#fff6e6;border-color:var(--star);color:#9a6b12;}
+
+  .nav{display:flex;gap:10px;padding:4px 14px 14px;flex-shrink:0;}
+  .nav button{flex:1;border:0;border-radius:14px;padding:15px;font-size:16px;font-weight:700;cursor:pointer;}
+  .nav .prev{background:#dfe6e4;color:var(--cx-deep);}
+  .nav .next{background:var(--cx);color:#fff;}
+  .nav button:active{transform:scale(.98);}
+
+  .subbar{display:flex;gap:10px;justify-content:center;align-items:center;padding:0 14px 12px;flex-shrink:0;font-size:13px;}
+  .subbar button,.subbar label{background:none;border:0;color:var(--cx-deep);font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:6px 8px;}
+  .subbar .sep{color:var(--line);}
+  .subbar input{accent-color:var(--cx);width:16px;height:16px;}
+
+  /* edit modal */
+  .modal{position:fixed;inset:0;background:rgba(10,20,18,.5);display:none;align-items:flex-end;z-index:50;}
+  .modal.show{display:flex;}
+  .sheet{background:#fff;width:100%;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom));max-height:85vh;display:flex;flex-direction:column;}
+  .sheet h3{margin:0 0 4px;font-size:17px;color:var(--cx-deep);}
+  .sheet p{margin:0 0 10px;font-size:12.5px;color:var(--ink-soft);}
+  .sheet textarea{width:100%;flex:1;min-height:230px;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:15px;line-height:1.5;font-family:inherit;resize:none;}
+  .sheet-actions{display:flex;gap:10px;margin-top:12px;}
+  .sheet-actions button{flex:1;border:0;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;}
+  .sheet .save{background:var(--cx);color:#fff;}
+  .sheet .cancel{background:#e5eae8;color:var(--ink);}
+  .sheet .reset{background:none;color:#b23b3b;flex:0 0 auto;padding:14px 12px;}
+
+  .empty{text-align:center;color:var(--ink-soft);padding:40px 20px;font-size:15px;}
+  .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:60;}
+  .toast.show{opacity:.95;}
+</style>
+</head>
+<body>
+  <div class="top">
+    <h1>✈️ Cathay Interview Practice</h1>
+    <span class="prog" id="prog">–</span>
+    <span class="wk" id="wk">★ 0</span>
+  </div>
+
+  <div class="deck" id="deck"></div>
+
+  <div class="subbar">
+    <button id="shuffle">🔀 Shuffle</button>
+    <span class="sep">|</span>
+    <label><input type="checkbox" id="weakOnly"> Practice weak only</label>
+  </div>
+
+  <!-- edit sheet -->
+  <div class="modal" id="modal">
+    <div class="sheet">
+      <h3>Edit your answer</h3>
+      <p>Make it yours — tweak the wording, add your real numbers or a personal story. Saved on this device only.</p>
+      <textarea id="editText"></textarea>
+      <div class="sheet-actions">
+        <button class="cancel" id="editCancel">Cancel</button>
+        <button class="reset" id="editReset">Reset</button>
+        <button class="save" id="editSave">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script id="data" type="application/json">
+{"v":1}
+</script>
+<script>
+/* ---------- content (answers are yours to edit on-device) ---------- */
+const DATA = [
+ {id:1,cat:"Intro / HR",q:"Tell me about yourself.",a:
+`Product leader with 10+ years across Asia. Today I'm Product Director at GoGoX, leading a 10-person product org and owning the operating model, planning cadence and roadmaps for a real-time logistics platform serving tens of thousands of customers a day.
+I recently led an org-wide AI transformation — embedding agentic AI across Product, Engineering, Data and QA and cutting cycle time ~40%. Earlier I was in growth at ByteDance and Meta.
+HK-based and tri-lingual, I'm drawn to Cathay because it's becoming a digital travel ecosystem where product operations and reliability are mission-critical — my wheelhouse.`},
+
+ {id:2,cat:"Intro / HR",q:"What are your current responsibilities?",a:
+`I lead a 10-person product and design org covering all products outside mainland China. I own the operating model — intake, quarterly planning, portfolio governance — and the success/delivery metrics on dashboards.
+I run operational readiness for a real-time platform (incident response, cross-functional coordination across Ops, Enterprise, Marketing, CS), I led our AI transformation, and I built our enterprise Transportation Management System from scratch for major enterprise clients.`},
+
+ {id:3,cat:"Motivation",q:"Why do you want to join Cathay Pacific?",a:
+`Three reasons.
+• Cathay is repositioning from airline to integrated travel-lifestyle ecosystem — a hard product-operations challenge at scale, which is what I love.
+• It's investing heavily in AI and digital, where I bring hands-on transformation experience.
+• It's a Hong Kong flagship — I'm HK-based and want to help build something iconic here.
+The reliability bar of air travel also matches how I think about real-time operations.`},
+
+ {id:4,cat:"Motivation",q:"Why are you looking to leave / why now?",a:
+`Nothing's pushing me out — my current role has been a great run; I built the product org and led our AI transformation. But I've largely done what I set out to do, and I want a bigger canvas: a larger-scale, customer-obsessed digital operation where I can apply the operating discipline and AI experience I've built.
+Cathay's scale and ambition is exactly that step up. (Always positive — never criticise your current employer.)`},
+
+ {id:5,cat:"Fit",q:"Why are you a strong fit for Head of Digital Product Operations?",a:
+`The role is running the operating rhythm that turns strategy into reliably shipped product — that's my day job. I own operating models, planning cadence and portfolio governance; I run operational readiness for a real-time platform; and I've led an AI transformation with measurable outcomes.
+My one gap is aviation domain, which I'll close fast — the disciplines (real-time ops, disruption resilience, multi-stakeholder coordination) transfer directly.`},
+
+ {id:6,cat:"Product Ops",q:"Walk me through how you run your product operating model and planning cadence.",a:
+`A layered cadence tying strategy to delivery:
+• Quarterly — product strategy meeting: turn company OKRs into the quarter's roadmap themes and priorities across the product lines; agree each team's target metrics.
+• Monthly — product review: progress vs roadmap/OKRs, key metric movements, demos, and reprioritise or kill based on the data.
+• Weekly — stand-ups + a cross-team dependency sync; I check the delivery dashboard so issues surface early.
+Underneath: a single intake funnel scored on impact vs effort (capacity ring-fenced for reliability), a now/next/later roadmap, and dashboards that run the reviews.
+Strategy quarterly, steer monthly, deliver weekly.`},
+
+ {id:7,cat:"Product Ops",q:"How do you decide what NOT to build?",a:
+`I start from strategy and outcomes, not feature requests. I score demand on impact vs effort (RICE-style), ring-fence capacity for reliability and tech debt, and I'm disciplined about killing or parking bets that don't move a priority metric.
+Saying no is core — I make the trade-off explicit and tie every yes/no back to strategy so stakeholders get the why.`},
+
+ {id:8,cat:"Product Ops",q:"How do you set and track success metrics / KPIs across teams?",a:
+`I'm very data-driven, so I run it as a metric tree, not a list. A North Star for the platform, and every team owns 1–2 Level-2 metrics that ladder up to it:
+• Customer/product: conversion, activation, cohort retention (D7/D30), funnel drop-off, DAU/MAU, NPS/CSAT.
+• Operational: fulfilment rate, matching/dispatch success, time-to-dispatch, ETA accuracy, cancellation rate.
+• Commercial: GMV, take rate, revenue per order, CAC/LTV.
+• Delivery health (DORA): cycle time, deployment frequency, change-failure rate, MTTR; plus uptime/SLOs, p95/p99 latency.
+
+How data lives in the process:
+• "No metric, no launch" — every feature ships with a target metric + event-tracking plan agreed before build.
+• A/B test significant changes; decide on statistical significance, with guardrail metrics.
+• Self-serve dashboards (Amplitude/Mixpanel + Looker on our warehouse) so teams read their own numbers daily.
+• Post-launch impact review 2–4 weeks after ship — did it move the metric? If not, iterate or cut.
+
+Example: conversion dipped in one market; the funnel dashboard localised it to the payment step; we A/B tested a redesign, saw a significant lift, and rolled it out.`},
+
+ {id:9,cat:"AI & Reliability",q:"How do you keep a high-volume real-time platform reliable? Tell me about a major incident.",a:
+`Reliability is designed in, then defended operationally.
+Real example: a caching refactor centralised our cache into Redis; deployed off-peak it looked fine at ~70% CPU, but next morning at peak it hit 100% and — because every API read config from the cache — everything timed out. We rolled back to restore.
+The rollback took ~7 minutes; the slow part was detection and decision (~90 min total). So I'm driving alerting on leading signals and a rollback-first playbook to hit a 15–30 min restore.
+Every incident becomes a systemic fix.`},
+
+ {id:10,cat:"AI & Reliability",q:"You led an AI transformation — what changed, and how did you get 40%?",a:
+`We're pushing agentic workflows across the whole SDLC — request → problem statement → prioritise → ticket → dev → deploy → bug detection and fixes. Concretely:
+• Agents equipped with 46 skills via an MCP, plus persistent memory from long-lived tickets, so they carry context across the workflow.
+• AI coding (Claude Code, Cursor, Codex) for spec-to-code; auto-generated tests to >90% coverage.
+• QA runs on simulators anyone can trigger; a QA agent produces a full report, de-dupes bug tickets, and now surfaces root cause, not just symptoms.
+• Guardrails: human review gates on agent-generated code, plus eval metrics on agent output.
+The 40% came from removing manual handoffs and wait time — measured as median lead time from discovery to release, before vs after.
+
+(Prep the follow-up "biggest blocker?": agent reliability / silent errors, agent knowledge & memory quality, eval rigor, adoption resistance, token cost & governance.)`},
+
+ {id:11,cat:"AI & Reliability",q:"How would you apply AI to Cathay's digital operations or customer experience?",a:
+`Start where value, feasibility and data align. Highest-impact:
+• Day-of-travel disruption — AI-driven proactive rebooking and personalised comms.
+• Upgrading the customer virtual assistant to gen-AI.
+• AI personalisation across the ecosystem.
+• Agentic delivery + AI anomaly detection in operations.
+Ship a measurable pilot, not a demo, and govern for accuracy, safety and brand.`},
+
+ {id:12,cat:"Fit",q:"Your background is logistics, not aviation — how will you ramp?",a:
+`The domain is the learning curve; the operating discipline transfers on day one.
+First 90 days: shadow airline Ops during irregular operations (IROPS), ride the full customer journey, map core systems and stakeholders, and land one or two quick reliability/operating-model wins while I absorb aviation specifics.
+Real-time dispatch, disruption resilience and marketplace complexity are the same muscle.`},
+
+ {id:13,cat:"Leadership",q:"Tell me about influencing without authority / a cross-functional conflict.",a:
+`Most of my impact is cross-functional with no direct authority — aligning Ops, Enterprise, Marketing, CS and senior leadership. I anchor on shared outcomes and data, make trade-offs explicit, and bring people in early rather than presenting decisions.
+
+[ADD YOUR STORY] A specific time you aligned a contentious priority across eng + commercial + ops — the situation, what you did, and the outcome. Tap ✎ Edit to write it in.`},
+
+ {id:14,cat:"Leadership",q:"How do you build and grow a team? How do you handle underperformance?",a:
+`I built and coached my product and design team, raising the bar on discovery, delivery and data-informed decisions. I grow people by giving outcome ownership plus coaching, not task-assigning.
+On underperformance: diagnose early, give direct specific feedback with a clear plan and support — and if it doesn't turn around, act decisively and fairly. A team's bar is set by what you tolerate.`},
+
+ {id:15,cat:"Leadership",q:"Tell me about a launch or project that failed — what did you learn?",a:
+`Honest version: our AI transformation initially over-relied on agents and shipped a silent production bug. The lesson — pair speed with guardrails: review gates, canary rollouts, monitoring. I turned it into a stronger, safer system, and incidents are now much rarer.
+I'd rather show I learn fast than pretend nothing failed.
+
+[OPTIONAL] Swap in another real example if you prefer — tap ✎ Edit.`},
+
+ {id:16,cat:"Leadership",q:"How do you handle competing priorities / say no to a senior stakeholder?",a:
+`I go back to strategy and the metrics. If a senior stakeholder pushes something that doesn't fit, I don't just say no — I show the trade-off (what we'd drop, the impact) and offer an alternative or sequencing.
+Most senior stakeholders respond to a clear, evidence-based trade-off. A shared scoreboard prevents most conflicts.`},
+
+ {id:17,cat:"Intro / HR",q:"What's your greatest strength and biggest weakness?",a:
+`Strength: turning ambiguity into an operating rhythm — taking a messy, high-stakes environment and giving it cadence, metrics and reliable delivery.
+Weakness: I can be impatient to ship, and I've had to consciously build in more guardrails — the AI incident taught me to slow down at the right moments, which I've since institutionalised.`},
+
+ {id:18,cat:"Motivation",q:"Where do you see yourself in 3–5 years?",a:
+`Leading digital product operations at real scale — ideally having helped Cathay turn its AI and ecosystem ambitions into dependable, shipped experiences, with a strong team grown underneath me.
+I care about scope and impact more than titles, especially somewhere building something iconic in Hong Kong.`},
+
+ {id:19,cat:"Motivation",q:"What are your salary expectations?",a:
+`I'd want to understand the full package and band first, but based on the market for a Head-level digital role in Hong Kong I'm looking around HK$1.5–2.4M total, open to the right base/bonus structure.
+I'm more focused on the scope and opportunity than a single number.`},
+
+ {id:20,cat:"Close",q:"Do you have any questions for us?",a:
+`• How is the digital org structured, and how does this role split vs Digital Experience and Digital & IT?
+• What does success look like in the first 12 months — what's broken or slow today?
+• How mature is the operating model and delivery tooling?
+• How does the team work with airline Operations during irregular operations (IROPS)?`},
+];
+
+/* ---------- state (localStorage, this device only) ---------- */
+const KEY="cxq_state_v1";
+let state={edits:{},weak:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==="object"){state.edits=s.edits||{};state.weak=s.weak||{};}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+
+function answerFor(item){return (state.edits[item.id]!=null)?state.edits[item.id]:item.a;}
+function isEdited(item){return state.edits[item.id]!=null;}
+function weakCount(){return Object.values(state.weak).filter(Boolean).length;}
+
+/* ---------- deck / order ---------- */
+let order=[],pos=0,revealed=false,weakOnly=false;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function buildOrder(){
+  let pool=DATA.map((_,i)=>i);
+  if(weakOnly)pool=pool.filter(i=>state.weak[DATA[i].id]);
+  order=shuffle(pool);pos=0;
+}
+function current(){return order.length?DATA[order[pos]]:null;}
+
+/* ---------- render ---------- */
+const deck=document.getElementById('deck');
+function render(){
+  const item=current();
+  document.getElementById('wk').textContent="★ "+weakCount();
+  if(!item){
+    document.getElementById('prog').textContent="0/0";
+    deck.innerHTML='<div class="card"><div class="empty">No cards here yet.<br><br>Turn off <b>Practice weak only</b>, or mark some cards with ★ Need practice.</div></div>';
+    return;
+  }
+  document.getElementById('prog').textContent=(pos+1)+"/"+order.length;
+  const on=state.weak[item.id]?'on':'';
+  const editedTag=isEdited(item)?'<span class="edited">edited</span>\n':'';
+  deck.innerHTML=`
+    <div class="card" id="card">
+      <span class="chip">${item.cat}</span>
+      <div class="qwrap">
+        <div class="qnum">Q${item.id} · Question ${pos+1} of ${order.length}</div>
+        <div class="q">${escapeHtml(item.q)}</div>
+      </div>
+      ${revealed?`<div class="body"><div id="ans">${editedTag}<span class="answer">${escapeHtml(answerFor(item))}</span></div></div>`
+                :`<div class="body"><p class="hint-swipe">Think through your answer out loud, then reveal.</p></div>`}
+      ${revealed?'':'<button class="reveal-btn" id="revealBtn">Show model answer</button>'}
+      <div class="actions">
+        <button id="markBtn" class="${on}"><span class="ico">${state.weak[item.id]?'★':'☆'}</span>${state.weak[item.id]?'Marked':'Need practice'}</button>
+        <button id="editBtn"><span class="ico">✎</span>Edit answer</button>
+        <button id="againBtn"><span class="ico">${revealed?'🙈':'👁'}</span>${revealed?'Hide':'Reveal'}</button>
+      </div>
+      <div class="nav">
+        <button class="prev" id="prevBtn">‹ Prev</button>
+        <button class="next" id="nextBtn">Next ›</button>
+      </div>
+    </div>`;
+  const rb=document.getElementById('revealBtn');if(rb)rb.onclick=()=>{revealed=true;render();};
+  document.getElementById('againBtn').onclick=()=>{revealed=!revealed;render();};
+  document.getElementById('markBtn').onclick=()=>{state.weak[item.id]=!state.weak[item.id];if(!state.weak[item.id])delete state.weak[item.id];save();toast(state.weak[item.id]?'Marked for practice ★':'Unmarked');render();};
+  document.getElementById('editBtn').onclick=()=>openEdit(item);
+  document.getElementById('prevBtn').onclick=prev;
+  document.getElementById('nextBtn').onclick=next;
+  attachSwipe(document.getElementById('card'));
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+function next(){if(!order.length)return;pos=(pos+1)%order.length;revealed=false;render();}
+function prev(){if(!order.length)return;pos=(pos-1+order.length)%order.length;revealed=false;render();}
+
+/* ---------- edit sheet ---------- */
+const modal=document.getElementById('modal'),editText=document.getElementById('editText');
+let editingItem=null;
+function openEdit(item){editingItem=item;editText.value=answerFor(item);modal.classList.add('show');setTimeout(()=>editText.focus(),80);}
+function closeEdit(){modal.classList.remove('show');editingItem=null;}
+document.getElementById('editCancel').onclick=closeEdit;
+document.getElementById('editSave').onclick=()=>{if(editingItem){state.edits[editingItem.id]=editText.value;save();toast('Saved ✓');}closeEdit();render();};
+document.getElementById('editReset').onclick=()=>{if(editingItem){delete state.edits[editingItem.id];save();toast('Reset to original');}closeEdit();render();};
+modal.addEventListener('click',e=>{if(e.target===modal)closeEdit();});
+
+/* ---------- swipe ---------- */
+function attachSwipe(el){if(!el)return;let x0=null,y0=null;
+  el.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;y0=e.touches[0].clientY;},{passive:true});
+  el.addEventListener('touchend',e=>{if(x0==null)return;const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){dx<0?next():prev();}x0=null;},{passive:true});
+}
+
+/* ---------- controls ---------- */
+document.getElementById('shuffle').onclick=()=>{buildOrder();revealed=false;render();toast('Shuffled 🔀');};
+document.getElementById('weakOnly').onchange=e=>{weakOnly=e.target.checked;buildOrder();revealed=false;render();};
+
+/* ---------- toast ---------- */
+let toastT;const toastEl=document.getElementById('toast');
+function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>toastEl.classList.remove('show'),1400);}
+
+/* ---------- go ---------- */
+buildOrder();render();
+</script>
+</body>
+</html>
