@@ -237,6 +237,28 @@ I'm more focused on the scope and opportunity than a single number.`},
 • How mature is the operating model and delivery tooling?
 • How does the team work with airline Operations during irregular operations (IROPS)?`},
 
+ {id:21,cat:"Product Ops",q:"What tools would you use to run product operations, and why?",a:
+`Tools follow the operating model — I standardise on a connected stack, not a pile of apps, so intake → delivery → impact is one source of truth.
+• Planning & intake: Jira / Linear for delivery; Productboard (or Aha!) for roadmap + scored intake.
+• Analytics & experimentation: Amplitude / Mixpanel for product analytics, Looker / Tableau on the warehouse, a real A/B platform (Statsig / Optimizely).
+• Delivery & reliability health: DORA dashboards (LinearB), plus Datadog / Grafana for SLOs, latency and incidents.
+• Knowledge & comms: Confluence / Notion as the single doc source, Slack for signal; voice-of-customer via Zendesk + Dovetail.
+• AI layer: agentic workflows + AI coding (Claude Code / Cursor / Codex) via an MCP to strip out manual handoffs.
+Why: I choose tools that (1) give one version of the truth, (2) connect discovery → release → impact, and (3) let teams self-serve their own metrics. I'm tool-agnostic — I'd adopt whatever Cathay already runs before adding anything, and kill tool sprawl.`},
+
+ {id:22,cat:"Fit",q:"You're already a Product Director — why move into product operations? Isn't that a step sideways?",a:
+`It's a step up in scope, not sideways. The more senior I've become, the clearer it is that the biggest leverage isn't shipping one product — it's the operating system that makes many teams ship reliably at scale. That system is product operations.
+• It plays to what I'm already best at — operating model, planning cadence, portfolio governance, metrics and reliability — but at Head level across a whole digital org, not one product line.
+• At Cathay's scale and reliability bar, operations is the real differentiator between a good strategy and a shipped one.
+• It's a bigger canvas and sits closer to the top of the org.
+I'm not stepping away from product — I'm operating it at the level where I add the most value.`},
+
+ {id:23,cat:"Fit",q:"How can your lack of aviation experience actually be an advantage?",a:
+`Two ways — and I'll name the domain gap upfront: I'll close it fast.
+• Fresh eyes, no legacy assumptions. In a digital transformation, an outsider asks "why do we do it this way" and surfaces things insiders have stopped seeing. I'm not anchored to how aviation has always run.
+• Cross-industry playbooks. I bring patterns from real-time logistics and tech — on-demand dispatch, disruption/IROPS-style resilience, marketplace complexity, AI transformation, DORA and experimentation — that a pure-aviation hire may not have seen.
+The operating discipline transfers on day one; the domain is the only learning curve, and outside perspective is exactly what a digital reinvention needs.`},
+
  {id:101,cat:"SJT Practice",q:"During peak hours, a release you approved is suspected of degrading the app for many customers, but the root cause isn't confirmed. What do you do first?",
   opts:`A. Keep investigating until you're certain of the root cause before acting.
 B. Roll back the suspect release immediately, then diagnose.
