@@ -259,6 +259,15 @@ I'm not stepping away from product — I'm operating it at the level where I add
 • Cross-industry playbooks. I bring patterns from real-time logistics and tech — on-demand dispatch, disruption/IROPS-style resilience, marketplace complexity, AI transformation, DORA and experimentation — that a pure-aviation hire may not have seen.
 The operating discipline transfers on day one; the domain is the only learning curve, and outside perspective is exactly what a digital reinvention needs.`},
 
+ {id:24,cat:"AI & Reliability",q:"In your AI transformation, QA became the bottleneck. How did you diagnose it and unblock it?",a:
+`Classic theory-of-constraints: once AI sped up spec-to-code, the constraint moved downstream — manual QA couldn't keep pace, and you can't trust AI-generated code without verification. So I attacked QA with the same AI leverage instead of throwing bodies at it.
+• Shift-left tests: auto-generate unit + integration tests alongside the code to >90% coverage, so quality is built in, not inspected in at the end.
+• Self-serve simulators: anyone (PM, dev) can trigger a full QA run — QA stops being a single-team gate people queue behind.
+• QA agent: runs the suite, produces a full report, de-dupes bug tickets automatically, and surfaces root cause, not just symptoms — so triage time collapses.
+• Guardrails to keep trust: human review gates on agent code, canary rollouts, and eval metrics on agent output.
+• Reframed the QA role: from manual gatekeeper to owner of the automated quality system and test infrastructure.
+Result: testing stopped being the handoff everyone waited on — a big part of the ~40% cycle-time cut, with coverage above 90% and faster root-cause on bugs.`},
+
  {id:101,cat:"SJT Practice",q:"During peak hours, a release you approved is suspected of degrading the app for many customers, but the root cause isn't confirmed. What do you do first?",
   opts:`A. Keep investigating until you're certain of the root cause before acting.
 B. Roll back the suspect release immediately, then diagnose.
