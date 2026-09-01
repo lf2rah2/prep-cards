@@ -57,6 +57,8 @@
   .subbar button,.subbar label{background:none;border:0;color:var(--cx-deep);font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:6px 8px;}
   .subbar .sep{color:var(--line);}
   .subbar input{accent-color:var(--cx);width:16px;height:16px;}
+  .subbar select{border:1px solid var(--line);border-radius:10px;padding:7px 9px;font-size:13px;font-weight:700;color:var(--cx-deep);background:#fff;}
+  .opts{white-space:pre-wrap;font-size:14.5px;line-height:1.55;color:#2a3a37;}
 
   /* edit modal */
   .modal{position:fixed;inset:0;background:rgba(10,20,18,.5);display:none;align-items:flex-end;z-index:50;}
@@ -86,9 +88,14 @@
   <div class="deck" id="deck"></div>
 
   <div class="subbar">
+    <select id="catSel" aria-label="Deck">
+      <option value="all">All decks</option>
+      <option value="interview">Interview Qs</option>
+      <option value="sjt">SJT practice</option>
+    </select>
     <button id="shuffle">🔀 Shuffle</button>
     <span class="sep">|</span>
-    <label><input type="checkbox" id="weakOnly"> Practice weak only</label>
+    <label><input type="checkbox" id="weakOnly"> Weak only</label>
   </div>
 
   <!-- edit sheet -->
@@ -229,6 +236,78 @@ I'm more focused on the scope and opportunity than a single number.`},
 • What does success look like in the first 12 months — what's broken or slow today?
 • How mature is the operating model and delivery tooling?
 • How does the team work with airline Operations during irregular operations (IROPS)?`},
+
+ {id:101,cat:"SJT Practice",q:"During peak hours, a release you approved is suspected of degrading the app for many customers, but the root cause isn't confirmed. What do you do first?",
+  opts:`A. Keep investigating until you're certain of the root cause before acting.
+B. Roll back the suspect release immediately, then diagnose.
+C. Wait to see if it self-resolves to avoid an unnecessary rollback.
+D. Escalate to your manager and wait for their decision.`,
+  a:`Best: B — for a customer-impacting Sev-1 tied to a recent release, restore service first (rollback-first), diagnose after.
+Worst: C — hoping it self-resolves risks prolonged customer impact.
+Principle: protect the customer and restore fast; root-cause in the postmortem.`},
+
+ {id:102,cat:"SJT Practice",q:"Commercial wants a revenue feature shipped this quarter; Operations says the same team is needed to fix a reliability issue hurting customers. You can't do both. How do you handle it?",
+  opts:`A. Side with Commercial — revenue is the priority.
+B. Side with Operations — reliability always wins.
+C. Bring both to a shared trade-off view (impact, risk, data) and decide against strategy, communicating the why.
+D. Split the team across both to keep everyone happy.`,
+  a:`Best: C — make the trade-off explicit with data and decide against strategy; transparency prevents resentment.
+Worst: D — splitting thinly usually delivers neither well.
+Principle: prioritise on evidence and shared outcomes, not the loudest voice.`},
+
+ {id:103,cat:"SJT Practice",q:"To hit a launch date, an engineer proposes skipping the QA/controls step 'just this once.' The feature touches customer data. Best response?",
+  opts:`A. Approve it — the deadline matters and it's one time.
+B. Refuse and keep the full QA/controls; adjust scope or date instead.
+C. Approve, but ask them to test quietly in production.
+D. Escalate to compliance and pause everything indefinitely.`,
+  a:`Best: B — never skip controls on customer-data paths; flex scope or timeline instead.
+Worst: C — untested prod changes on customer data is the highest-risk option.
+Principle: speed never overrides integrity/controls, especially in a regulated, trust-based business.`},
+
+ {id:104,cat:"SJT Practice",q:"Your team wants to let an AI agent auto-merge code to speed delivery. How do you proceed?",
+  opts:`A. Allow full auto-merge — trust the agent, maximise speed.
+B. Ban AI in the pipeline — too risky.
+C. Allow it behind human review gates, tests, canary rollout and monitoring.
+D. Allow it only for one senior engineer to decide case by case.`,
+  a:`Best: C — capture the speed with guardrails (review gates, tests, canary, monitoring).
+Worst: A — unchecked auto-merge is how silent bugs reach production.
+Principle: adopt AI aggressively but with proportionate controls and observability.`},
+
+ {id:105,cat:"SJT Practice",q:"A capable team member has been missing commitments for two months, affecting the team. What do you do?",
+  opts:`A. Give them more time — they're capable, it'll pass.
+B. Quietly reassign their work to others.
+C. Have a direct conversation: specific feedback, understand causes, agree a clear improvement plan with support.
+D. Start the exit process immediately.`,
+  a:`Best: C — address it early and directly with a concrete plan and support.
+Worst: B — silently absorbing it erodes the team and dodges the issue.
+Principle: diagnose early, be direct and fair, support then decide.`},
+
+ {id:106,cat:"SJT Practice",q:"A senior exec strongly believes a feature will succeed, but your data and an A/B test say it won't. They ask you to launch it anyway. Best action?",
+  opts:`A. Launch it — they're senior, respect the hierarchy.
+B. Refuse outright and cite the data.
+C. Share the evidence and risk, propose a small pilot or redesign, and align on a decision.
+D. Launch quietly and hope it works.`,
+  a:`Best: C — present evidence and a lower-risk path (pilot/iterate); make it a shared, informed decision.
+Worst: D — launching without alignment and hiding it destroys trust.
+Principle: influence with data and options, not confrontation or blind compliance.`},
+
+ {id:107,cat:"SJT Practice",q:"The night before a major launch, QA finds a bug that could show incorrect booking info to some customers. Fixing it delays launch a few days. What do you do?",
+  opts:`A. Launch on time — it only affects some customers.
+B. Delay and fix it; communicate the reason to stakeholders.
+C. Launch, then fix it as a fast-follow patch after go-live.
+D. Launch to a small percentage first to limit exposure.`,
+  a:`Best: B — anything risking wrong customer info (trust/compliance) justifies a short delay; be transparent.
+(D is defensible only if risk is low and truly contained — but for data correctness, B is safest.)
+Worst: A. Principle: protect customer trust over hitting a date.`},
+
+ {id:108,cat:"SJT Practice",q:"An incident is impacting customers and you're mid-response. A corporate client's account manager is demanding updates. How do you handle comms?",
+  opts:`A. Focus only on the fix; comms can wait until it's resolved.
+B. Assign a comms owner to give the client and internal stakeholders regular, honest updates while the team fixes it.
+C. Tell the account manager it's under control and give no details.
+D. Personally handle all client comms yourself while also leading the fix.`,
+  a:`Best: B — separate comms ownership from the technical response; keep stakeholders informed with honest, regular updates.
+Worst: A — silence during customer impact damages trust.
+Principle: proactive, honest communication is part of incident management, run in parallel by a dedicated owner.`},
 ];
 
 /* ---------- state (localStorage, this device only) ---------- */
@@ -242,10 +321,11 @@ function isEdited(item){return state.edits[item.id]!=null;}
 function weakCount(){return Object.values(state.weak).filter(Boolean).length;}
 
 /* ---------- deck / order ---------- */
-let order=[],pos=0,revealed=false,weakOnly=false;
+let order=[],pos=0,revealed=false,weakOnly=false,catFilter='all';
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function inCat(item){if(catFilter==='all')return true;if(catFilter==='sjt')return item.cat==='SJT Practice';return item.cat!=='SJT Practice';}
 function buildOrder(){
-  let pool=DATA.map((_,i)=>i);
+  let pool=DATA.map((_,i)=>i).filter(i=>inCat(DATA[i]));
   if(weakOnly)pool=pool.filter(i=>state.weak[DATA[i].id]);
   order=shuffle(pool);pos=0;
 }
@@ -268,12 +348,12 @@ function render(){
     <div class="card" id="card">
       <span class="chip">${item.cat}</span>
       <div class="qwrap">
-        <div class="qnum">Q${item.id} · Question ${pos+1} of ${order.length}</div>
+        <div class="qnum">${item.cat==='SJT Practice'?'SJT Scenario':'Q'+item.id} · ${pos+1} of ${order.length}</div>
         <div class="q">${escapeHtml(item.q)}</div>
       </div>
       ${revealed?`<div class="body"><div id="ans">${editedTag}<span class="answer">${escapeHtml(answerFor(item))}</span></div></div>`
-                :`<div class="body"><p class="hint-swipe">Think through your answer out loud, then reveal.</p></div>`}
-      ${revealed?'':'<button class="reveal-btn" id="revealBtn">Show model answer</button>'}
+                :`<div class="body">${item.opts?`<div class="opts">${escapeHtml(item.opts)}</div>`:`<p class="hint-swipe">Think through your answer out loud, then reveal.</p>`}</div>`}
+      ${revealed?'':`<button class="reveal-btn" id="revealBtn">${item.cat==='SJT Practice'?'Show recommended answer':'Show model answer'}</button>`}
       <div class="actions">
         <button id="markBtn" class="${on}"><span class="ico">${state.weak[item.id]?'★':'☆'}</span>${state.weak[item.id]?'Marked':'Need practice'}</button>
         <button id="editBtn"><span class="ico">✎</span>Edit answer</button>
@@ -316,6 +396,7 @@ function attachSwipe(el){if(!el)return;let x0=null,y0=null;
 
 /* ---------- controls ---------- */
 document.getElementById('shuffle').onclick=()=>{buildOrder();revealed=false;render();toast('Shuffled 🔀');};
+document.getElementById('catSel').onchange=e=>{catFilter=e.target.value;buildOrder();revealed=false;render();};
 document.getElementById('weakOnly').onchange=e=>{weakOnly=e.target.checked;buildOrder();revealed=false;render();};
 
 /* ---------- toast ---------- */
