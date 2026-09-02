@@ -157,66 +157,78 @@ Strategy quarterly, steer monthly, deliver weekly.`},
 Saying no is core — I make the trade-off explicit and tie every yes/no back to strategy so stakeholders get the why.`},
 
  {id:8,cat:"Product Ops",q:"How do you set and track success metrics / KPIs across teams?",a:
-`I'm very data-driven, so I run metrics as a tree, not a list — a company North Star at the top, and each squad owns a theme-level north star + 2–3 key metrics that ladder up to it.
+`I'm growth-first, so I don't list metrics — I decompose the North Star into the lever each squad owns.
 
-Company North Star: monthly Completed-Order GTV (value actually delivered — both sides of the marketplace working). Guardrails: overall completion rate, contribution margin / cost-to-serve (we're driving to profitability), and platform uptime.
+Company North Star: monthly Completed Orders (real value events — not GTV, which hides price and mix).
+Growth identity: Completed Orders = Active Customers × Order Frequency × Completion Rate.
+Guardrails: contribution margin per order · p90 time-to-match · CAC payback.
 
-We're organised Spotify-style into theme squads; each owns its north star + key metrics:
+Each squad owns a factor in that identity:
 
-• Client Experience (customer / shipper side)
-  – North star: repeat-order rate (retained active customers)
-  – Key: quote→order conversion · completion & cancellation rate · NPS/CSAT
+• Client Experience — owns Active Customers × Frequency (demand)
+  – 1st-order activation: % of new signups completing order #1 within 7 days
+  – M1 cohort repeat rate: % of a monthly cohort ordering again in month +1
+  – Frequency: completed orders per active customer (28-day)
 
-• Partner Experience (drivers / couriers)
-  – North star: weekly active earning drivers (supply liquidity)
-  – Key: job acceptance rate · driver earnings per active hour · D30 driver retention
+• Partner Experience — owns Completion Rate (supply liquidity)
+  – Fill rate: % of order requests matched to a driver within 60s
+  – Driver activation: % of new drivers with ≥5 jobs in first 14 days
+  – Earnings per online hour (retention driver) + M3 driver cohort retention
 
-• Enterprise (B2B / TMS)
-  – North star: net revenue retention (recurring enterprise revenue)
-  – Key: GTV per client + logo count · on-time-delivery SLA % · order volume through TMS
+• Enterprise (B2B / TMS) — its own expansion tree
+  – Net Revenue Retention: expansion − churn − contraction on the account cohort
+  – Time-to-first-order for new accounts (onboarding activation)
+  – On-time-delivery SLA % (the churn driver)
 
-• Payment & Internal Efficiency (internal platforms)
-  – North star: cost-to-serve per order
-  – Key: payment success rate · on-time/accurate settlement · automation coverage (manual-hours saved)
+• Payment & Internal Efficiency — protects margin, recovers lost orders
+  – Payment success rate: authorised / attempted (recovers dropped GMV)
+  – Cost-to-serve per completed order (ops cost / order)
+  – Straight-through settlement rate (no manual touch)
 
-• AI Integration (chatbot / voicebot / CS)
-  – North star: CS automation / containment rate (resolved with no human)
-  – Key: AI order-placement success rate · escalation/fallback + hallucination rate (guardrail) · cost per contact
+• AI Integration (chatbot / voicebot / CS) — deflection
+  – Containment rate: % of contacts resolved by AI with no human handoff
+  – AI order-placement completion rate (task success end-to-end)
+  – Cost per contact + fallback/hallucination rate (guardrail)
 
-How the data lives in the process:
-• "No metric, no launch" — every feature ships with a target metric + tracking plan agreed before build.
-• A/B test significant changes; decide on statistical significance, with guardrail metrics.
-• Self-serve dashboards so each squad reads its own numbers daily.
-• Post-launch impact review 2–4 weeks after ship — did it move the metric? Iterate or cut.`},
+Discipline: no-metric-no-launch, A/B with guardrails + significance, self-serve cohort dashboards, and a 2–4 week post-launch impact read — move the metric or cut it.`},
 
  {id:26,cat:"Product Ops",q:"How would you set success metrics / KPIs for Cathay's digital products?",a:
-`Same method — a metric tree with an ecosystem North Star, then a north star + 2–3 metrics per product pillar. As Head of Digital Product Operations I'd own not just product-outcome metrics but the reliability and delivery-health metrics that keep them shipping dependably.
+`Same growth-first approach — decompose a commercial North Star into owned levers, and make reliability a revenue metric.
 
-Ecosystem North Star: digitally-engaged member value — active members who book, manage and earn/burn digitally, and the margin they drive. Guardrails: platform reliability (uptime/SLO), CSAT, cost-to-serve.
+Ecosystem North Star: digital direct revenue.
+Growth identity: Sessions × Look-to-Book Conversion × AOV × (1 + Ancillary Attach) × Repeat Rate.
+Guardrails: availability/SLO · CSAT · cost-to-serve per booking.
 
-Pillars:
+Pillars, each owning a factor:
 
-• Booking & Conversion (direct digital revenue)
-  – North star: digital direct revenue
-  – Key: look-to-book conversion · direct-channel share vs OTAs · ancillary attach rate (seats/bags/upgrades)
+• Booking & Conversion — owns Conversion × AOV
+  – Look-to-book: bookings / search sessions (split by device + market)
+  – Direct-channel share: % of bookings on .com/app vs OTA/GDS (the margin lever)
+  – Ancillary attach: % of bookings adding seat/bag/upgrade + ancillary revenue per booking
 
-• Loyalty & Personalisation (Cathay membership / Asia Miles)
-  – North star: monthly active members / member LTV
-  – Key: miles earn+burn rate · personalised-offer conversion · repeat-booking retention by tier
+• Loyalty & Personalisation (Cathay / Asia Miles) — owns Repeat Rate
+  – 12-month member repeat-booking rate (cohort, by tier)
+  – Personalised-offer incrementality: conversion vs holdout (not raw CTR)
+  – Miles earn:burn ratio (engagement + liability health) + % revenue from logged-in members
 
-• Day-of-Travel & Disruption (IROPS experience)
-  – North star: self-service disruption-resolution rate
-  – Key: digital check-in rate · self-serve rebooking rate during IROPS · proactive-notification delivery/open · time-to-rebook
+• Day-of-Travel & Disruption (IROPS) — owns self-service activation
+  – Self-serve rebooking rate during IROPS (resolved with no agent)
+  – Digital check-in rate
+  – Proactive-notification reach: % of disrupted pax notified before they contact CX + action rate
+  – Time-to-rebook (p50 / p90)
 
-• Customer Service / Conversational AI
-  – North star: self-service containment rate
-  – Key: first-contact resolution · cost per contact · post-interaction CSAT · escalation/fallback rate
+• Conversational AI / CS — owns deflection
+  – Containment rate: % of contacts resolved by AI, no human
+  – First-contact resolution + contacts per 1,000 pax
+  – Cost per contact + post-contact CSAT (guardrail)
 
-• Digital Operations & Reliability (the "operations" in the role)
-  – North star: uptime/SLO adherence through peak and IROPS
-  – Key: p95/p99 latency of booking & check-in · incident MTTR · change-failure rate; plus DORA delivery health (cycle time, deploy frequency)
+• Digital Operations & Reliability — owns the guardrail, as a revenue metric
+  – Availability vs SLO through peak + IROPS
+  – p95 / p99 latency of booking & check-in flows
+  – Incident MTTR + change-failure rate (DORA)
+  – Conversion loss per minute of downtime (reliability → $)
 
-Principles I'd hold: tie every metric to a customer or commercial outcome (not vanity/volume); set explicit guardrails so a revenue metric can't be won by hurting reliability or trust; and make reliability a first-class KPI — in air travel the cost of a digital failure during disruption is reputational, not just a dropped session.`},
+Principles: define every metric with its numerator/denominator, measure retention as cohorts and personalisation as incrementality (vs holdout), and never let a revenue metric be won by hurting trust or uptime.`},
 
  {id:9,cat:"AI & Reliability",q:"How do you keep a high-volume real-time platform reliable? Tell me about a major incident.",a:
 `Reliability is designed in, then defended operationally.
